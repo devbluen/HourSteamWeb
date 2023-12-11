@@ -37,6 +37,7 @@
 - Do not add more than 30 games, after that there is a limit imposed by Steam.
 - I have not tested logging in to more than 2 accounts, so there may be some limit imposed by Steam on accounts per IP.
 - If you have Steam Guard and re-login several times in a short time with this application, there may be an error due to a query limit imposed by Steam.
+- Do not delete the "dados" folder as it will save the IDs of the games you saved on the accounts.
 
 ## 🫡 Resources Used
 - NodeJs + HTML + Js
