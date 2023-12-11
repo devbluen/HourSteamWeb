@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Controle do Servidor</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        
+        body {
+            background-color: #1e1e1e; 
+            color: #fff;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .navbar {
+            background-color: #282c34;
+            padding: 0.75rem 1rem;
+        }
+
+        .navbar-brand {
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .container {
+            padding-top: 2%;
+        }
+
+        .card {
+            background-color: #2c303a;
+            border: none;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            background-color: #3c4049;
+            color: #fff;
+            border-radius: 4px;
+            border: 1px solid #555a60;
+        }
+
+        .btn-primary {
+            background-color: #4e85c5;
+            border-color: #4e85c5;
+        }
+
+        .btn-warning {
+            background-color: #d8a800;
+            border-color: #d8a800;
+        }
+
+        .btn-danger {
+            background-color: #a83232;
+            border-color: #a83232;
+        }
+
+        #consoleLog {
+            background-color: #2c303a; 
+            border: 1px solid #555a60;
+            color: #fff;
+            padding: 10px; 
+            height: 200px; 
+            overflow-y: scroll; 
+            border-radius: 4px;
+        }
+
+        .hidden { 
+            display: none; 
+        }
+
+        .icon-left {
+            margin-right: 5px;
+        }
+
+        #serverInfoBox {
+            background-color: white;
+            color: black;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            position: fixed; /* Faz a caixa ficar sobre os outros elementos */
+            top: 50%; /* Centraliza verticalmente */
+            left: 50%; /* Centraliza horizontalmente */
+            transform: translate(-50%, -50%); /* Ajuste fino da centralização */
+            z-index: 1000; /* Garante que a caixa fique acima de outros elementos */
+            /* Outros estilos conforme necessário */
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand" href="https://github.com/igdiogo"><i class="fas fa-server"></i> Steam Server Panel</a>
+        <div class="ml-auto">
+            <span class="navbar-text">
+                Logado: <span id="serverStatus">Nenhuma Conta</span>
+            </span>
+            <button onclick="toggleServer()" class="btn btn-outline-light ml-3">Informações</button>
+        </div>
+    </nav>
+
+    <div id="serverInfoBox" class="container mt-4 hidden" style="background-color: #3c4049; color: #fff;">
+    </div>
+
+    <div class="container">
+        
+        <!-- Formulário de Login -->
+        <div id="loginForm" class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card mt-5">
+                    <div class="card-header">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Nome de usuário</label>
+                            <input type="text" id="accountName" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Senha</label>
+                            <input type="password" id="password" class="form-control" required>
+                        </div>
+                        <div id="steamGuardCodeForm" class="form-group hidden">
+                            <label>Código Steam Guard</label>
+                            <input type="text" id="steamGuardCode" class="form-control">
+                        </div>
+
+                        <button onclick="submitLogin()" class="btn btn-primary btn-block">
+                            <i class="fas fa-unlock-alt"></i> Login
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controles do Jogo -->
+        <div id="gameControl" class="row justify-content-center hidden">
+            <div class="col-md-6">
+                <div class="card mt-5">
+                    <div class="card-header">
+                        <i class="fas fa-gamepad"></i> Controles do Jogo
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>ID do Jogo</label>
+                            <input type="text" id="gameId" class="form-control" placeholder="Exemplo: 730, 1578, 1574">
+                        </div>
+                        <button onclick="startGame()" class="btn btn-success btn-block">
+                            <i class="fas fa-play"></i> Iniciar Jogo
+                        </button>
+                        <button onclick="stopGame()" class="btn btn-danger btn-block">
+                            <i class="fas fa-stop"></i> Parar Jogo
+                        </button>
+                        <button onclick="stopSystem()" class="btn btn-danger btn-block">
+                            <i class="fas fa-fire"></i> Desligar Serviço
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Log do Console -->
+        <div id="gameConsole" class="row justify-content-center hidden">
+            <div class="col-md-8">
+                <div class="card my-5">
+                    <div class="card-header">
+                        <i class="fas fa-spinner"></i> Console Log
+                    </div>
+                    <div class="card-body">
+                        <div id="consoleLog"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

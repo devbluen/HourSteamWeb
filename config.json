@@ -1,0 +1,6 @@
+{
+    "autoReplyCommands": {
+        "ajuda": "Commands:\ngithub",
+        "github": "Github:\nhttps://github.com/igdiogo"
+    }
+}
